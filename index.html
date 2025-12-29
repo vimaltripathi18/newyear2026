@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev New Year 2025 | @codebyvimal</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("VZoLU86jUYVeoj-PO");
+       })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --accent: #58a6ff;
+            --gold: #f2ce5a;
+            --pink: #ff79c6;
+            --green: #50fa7b;
+            --orange: #ffb86c;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --editor-bg: #000;
+        }
+
+        [data-theme="light"] {
+            --bg: #f6f8fa; --panel: #ffffff; --accent: #0969da; --gold: #9a6700;
+            --pink: #bf3989; --green: #1a7f37; --orange: #953800; --border: #d0d7de;
+            --text: #24292f; --editor-bg: #f0f3f6;
+        }
+
+        .matrix-mode {
+            --bg: #000; --panel: #000; --accent: #00ff00; --gold: #00ff00;
+            --pink: #00ff00; --green: #00ff00; --orange: #00ff00; --border: #00ff00;
+            --text: #00ff00; --editor-bg: #000;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed; top: 25px; right: 25px;
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 12px; border-radius: 50%; cursor: pointer;
+            z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #capture-area { width: 100%; max-width: 850px; background: var(--bg); padding: 10px; border-radius: 16px; }
+
+        .ide-window {
+            width: 100%; background: var(--panel); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); margin-bottom: 20px;
+        }
+
+        .ide-header {
+            background: var(--border); padding: 18px 25px;
+            display: flex; align-items: center; border-radius: 15px 15px 0 0;
+        }
+
+        .dot { width: 14px; height: 14px; border-radius: 50%; margin-right: 10px; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+
+        .ide-body { padding: 40px; }
+
+        .editor-container {
+            background: var(--editor-bg); border-radius: 12px; padding: 35px;
+            font-size: 1.2rem; line-height: 2.2; border: 1px solid var(--border);
+            margin-bottom: 30px; box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
+        }
+
+        .line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .indent { padding-left: 40px; }
+
+        input, textarea {
+            background: rgba(128,128,128,0.1); border: 1px solid var(--border);
+            color: var(--green); font-family: 'Fira Code', monospace;
+            padding: 10px 15px; border-radius: 8px; outline: none; font-size: 1.1rem;
+        }
+
+        .keyword { color: var(--pink); font-weight: 600; }
+        .func-name { color: var(--accent); }
+
+        .controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+
+        .btn {
+            border: none; padding: 16px 30px; border-radius: 10px; cursor: pointer;
+            font-weight: 600; font-size: 1rem; font-family: 'Fira Code', monospace; transition: 0.3s;
+        }
+
+        .btn-run { background: #238636; color: white; }
+        .btn-run:hover { background: #2ea043; transform: scale(1.05); }
+
+        .btn-save { background: var(--border); color: var(--text); border: 1px solid #444; }
+
+        #terminal {
+            background: var(--editor-bg); border: 1px solid var(--border);
+            height: 220px; margin: 0 25px 25px 25px; overflow-y: auto; padding: 25px;
+            font-size: 0.9rem; border-radius: 10px;
+        }
+
+        .log-line { margin-bottom: 12px; border-bottom: 1px solid rgba(128,128,128,0.05); padding-bottom: 5px; }
+        .log-success { color: var(--gold); border-left: 4px solid var(--gold); padding-left: 12px; }
+
+        footer { text-align: center; font-size: 0.9rem; padding: 20px 0; color: var(--text); opacity: 0.8; }
+
+        @media (max-width: 600px) {
+            .ide-body { padding: 20px; } .editor-container { padding: 20px; font-size: 1rem; }
+            .indent { padding-left: 15px; } input, textarea { width: 100%; }
+        }
+
+        .balloon {
+            position: fixed; bottom: -100px; width: 40px; height: 55px;
+            border-radius: 50%; animation: floatUp 4.5s linear forwards; z-index: 1000;
+        }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(25deg); } }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+    <div id="capture-area">
+        <div class="ide-window">
+            <div class="ide-header">
+                <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                <span style="font-size: 0.85rem; margin-left: 10px; opacity: 0.7;">newyear_2026.js</span>
+            </div>
+
+            <div class="ide-body">
+                <div class="editor-container">
+                    <div class="line">
+                        <span class="keyword">export const</span> <span class="func-name">celebrate</span> = (
+                        <input type="text" id="userName" placeholder="your_name" style="width: 180px;">) => {
+                    </div>
+                    <div class="indent" style="margin-top: 20px;">
+                        <span class="keyword">return</span> `
+                        <textarea id="wishText" rows="1" placeholder="Write message..." style="width: 70%;"></textarea>
+                        `;
+                    </div>
+                    <div class="line">}</div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-run" id="runBtn" onclick="executeCode()">Run Script ▶</button>
+                    <button class="btn btn-save" onclick="saveAsImage()">Save PNG 📸</button>
+                </div>
+            </div>
+
+            <div id="terminal">
+                <div class="log-line" style="color: var(--accent)">[SYSTEM] Environment ready. Connecting to Vimal's Mail Server...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div style="margin-bottom: 12px;">Status: <span style="color: var(--green)">● Connected</span></div>
+        &copy; 2025 | Developed by <span style="color: var(--accent); font-weight: bold;">@codebyvimal</span>
+    </footer>
+
+    <audio id="popSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const popSound = document.getElementById('popSound');
+
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.remove('matrix-mode');
+            const current = body.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', next);
+            printToTerminal(`Theme: ${next.toUpperCase()}`, false, "SYSTEM");
+        }
+
+        function executeCode() {
+            const nameInput = document.getElementById('userName').value.trim();
+            const nameLower = nameInput.toLowerCase();
+            const wish = document.getElementById('wishText').value.trim();
+            const wishLower = wish.toLowerCase();
+            const btn = document.getElementById('runBtn');
+
+            if (!wish) {
+                printToTerminal("Error: return value cannot be empty.", false, "COMPILER");
+                return;
+            }
+
+            // 1. Send Email Logic
+            btn.innerHTML = "Deploying... ⏳";
+            btn.disabled = true;
+
+            const templateParams = {
+                from_name: nameInput || "Guest User",
+                message: wish
+            };
+
+            emailjs.send('wish_newyear2026', 'template_7957lgj', templateParams)
+                .then(() => {
+                    printToTerminal("Cloud Sync Success: Wish sent to Vimal!", false, "NETWORK");
+                    btn.innerHTML = "Run Script ▶";
+                    btn.disabled = false;
+                }, (error) => {
+                    printToTerminal("Network Error: Could not reach mail server.", false, "SYSTEM");
+                    btn.innerHTML = "Run Script ▶";
+                    btn.disabled = false;
+                });
+
+            // 2. Custom Easter Eggs
+            if (nameLower === 'bhai') {
+                document.body.classList.add('matrix-mode');
+                printToTerminal("BHAI SPOTTED. OVERRIDING SYSTEM.", true, "ROOT");
+                triggerParty();
+            }
+
+            if (wishLower.includes('party')) {
+                printToTerminal("PARTY_MODE: INITIALIZED.", false, "EVENT_BUS");
+            }
+
+            if (wishLower.includes('developer') || wishLower.includes('coder')) {
+                printToTerminal("DEV_RECOGNITION: Keep building great things!", true, "VIMAL_BOT");
+            }
+
+            // 3. Luck & Visuals
+            const isLucky = Math.random() < 0.20;
+            if (isLucky) {
+                popSound.currentTime = 0;
+                popSound.play();
+                triggerParty();
+            }
+            
+            printToTerminal(wish, isLucky, nameInput || "guest");
+            document.getElementById('wishText').value = "";
+        }
+
+        function printToTerminal(msg, lucky, sender) {
+            const div = document.createElement('div');
+            div.className = `log-line ${lucky ? 'log-success' : ''}`;
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `<span style="opacity:0.5">[${time}]</span> ${lucky ? '<strong>[STAR]</strong>' : '[LOG]'} ${sender}: ${msg}`;
+            terminal.prepend(div);
+        }
+
+        function saveAsImage() {
+            const area = document.getElementById('capture-area');
+            html2canvas(area, { backgroundColor: null, scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Wish_by_${document.getElementById('userName').value || 'Coder'}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        function triggerParty() {
+            confetti({ particleCount: 200, spread: 90, origin: { y: 0.7 } });
+            for (let i = 0; i < 15; i++) {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.style.left = Math.random() * 95 + 'vw';
+                b.style.background = `hsl(${Math.random() * 360}, 75%, 60%)`;
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
